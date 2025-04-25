@@ -1,0 +1,21 @@
+{
+  "bindings": [
+    {
+      "type": "cosmosDBTrigger",
+      "name": "documents",
+      "direction": "in",
+      "leaseContainerName": "leases",
+      "connection": "COSMOS_CONNECTION",
+      "databaseName": "%COSMOS_DATABASE_NAME%",
+      "containerName": "%COSMOS_CONTAINER_NAME%"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "outputData",
+      "direction": "out",
+      "connection": "COSMOS_CONNECTION",
+      "databaseName": "%COSMOS_DATABASE_NAME%",
+      "containerName": "%COSMOS_CONTAINER_NAME%"
+    }
+  ]
+}
