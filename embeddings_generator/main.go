@@ -67,7 +67,7 @@ func EmbeddingHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	documents, err := common.Parse(payloadBytes)
+	documents, err := common.Parse[map[string]any](payloadBytes)
 	if err != nil {
 		log.Printf("Failed to parse payload: %v", err)
 		http.Error(w, fmt.Sprintf("Failed to parse payload: %v", err), http.StatusBadRequest)

@@ -45,21 +45,11 @@ func processAndLog(w http.ResponseWriter, req *http.Request) {
 
 	logs = append(logs, fmt.Sprintf("Raw event payload: %s", triggerPayload))
 
-	// Unmarshal the `documents` field
-	var documents []common.CosmosDBDocument
-	var documentsRaw string
-
-	// First, unmarshal `triggerPayload.Data.Documents` as a string
-	if err := json.Unmarshal([]byte(triggerPayload.Data.Documents), &documentsRaw); err != nil {
-		log.Println("error while unmarshaling Documents field as string", err)
-		http.Error(w, "Failed to parse documents field: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// Then, unmarshal the JSON string into the `documents` slice
-	if err := json.Unmarshal([]byte(documentsRaw), &documents); err != nil {
-		log.Println("error while unmarshaling string to Document[]", err)
-		http.Error(w, "Failed to parse documents: "+err.Error(), http.StatusBadRequest)
+	// Use ParseDocuments (a specialized version of Parse) to get strongly typed documents
+	documents, err := common.Parse[common.CosmosDBDocument](payloadBytes)
+	if err != nil {
+		log.Printf("Failed to parse payload: %v", err)
+		http.Error(w, fmt.Sprintf("Failed to parse payload: %v", err), http.StatusBadRequest)
 		return
 	}
 
